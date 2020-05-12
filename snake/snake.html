@@ -1,0 +1,197 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Snake</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body id="snakegame">
+        <div class="gamearea" id="gamearea">
+            <div id="shead" class="snakehead">S</div>
+            <div id="food" class="food"></div>
+        </div>
+        <div class="btns">
+            <button onclick="startGame()">Start</button>
+            <button id="pausebtn" onclick="pauseGame()">Pause</button>
+        </div>
+        <script>
+            let snake = {
+                body: [],
+                direction: "ArrowRight",
+                step: 32,
+                status: false
+            };
+
+            let snakebody = document.getElementById("gamearea");
+            let shead = document.getElementById("shead");
+            let food = document.getElementById("food");
+            food.style.visibility = "hidden";
+
+            document.getElementById("snakegame").addEventListener("keydown", keyMoveSnake);
+
+            function keyMoveSnake(e) {
+                if(e.code === "ArrowDown" || e.code === "ArrowUp" || e.code === "ArrowLeft" || e.code === "ArrowRight" || e.code !== snake.direction){
+                    snake.direction = e.code;
+                    moveSnake();
+                }
+            }
+
+            function moveSnake(){
+                //{
+                let headtop = shead.offsetTop;
+                let headleft = shead.offsetLeft;
+                let tempp = null;
+                if(snake.body.length !== 0){
+                    tempp = document.getElementById("sbody_0");
+                }
+                //if the direction has snake body part one, the head would not move to that direction, ignore the key down
+                let newp;
+                switch(snake.direction){
+                    case "ArrowUp": {
+                        if(tempp != null && (tempp.offsetTop === (headtop - snake.step) && tempp.offsetLeft === headleft)) 
+                            return;
+                        newp = headtop - snake.step;
+                        if(newp < 0 || (snake.body.length > 0 && newp === snake.body[snake.body.length -1].offsetTop && headleft === snake.body[snake.body.length -1].offsetLeft)) snake.status = false;
+                        else
+                            shead.setAttribute("style", `top: ${newp}px; left: ${headleft}px`);
+                        break;
+                    }
+                    case "ArrowDown": {
+                        if(tempp != null && (tempp.offsetTop === (headtop + snake.step) && tempp.offsetLeft === headleft)) 
+                            return;
+                        newp = headtop + snake.step;
+                        if(newp > 800 || (snake.body.length > 0 && newp === snake.body[snake.body.length -1].offsetTop && headleft === snake.body[snake.body.length -1].offsetLeft)) snake.status = false;
+                        else
+                            shead.setAttribute("style", `top: ${newp}px; left: ${headleft}px`);
+                        break;
+                    }
+                    case "ArrowLeft": {
+                        if(tempp != null && (tempp.offsetTop === headtop && tempp.offsetLeft === (headleft - snake.step))) 
+                            return;
+                        newp = headleft - snake.step;
+                        if(newp < 0 || (snake.body.length > 0 && newp === snake.body[snake.body.length -1].offsetLeft && headtop === snake.body[snake.body.length -1].offsetTop )) snake.status = false;
+                        else 
+                            shead.setAttribute("style", `top: ${headtop}px; left: ${newp}px`);
+                        break;
+                    }
+                    case "ArrowRight": {
+                        if(tempp != null && (tempp.offsetTop === headtop && tempp.offsetLeft === (headleft + snake.step))) 
+                            return;
+                        newp = headleft + snake.step;
+                        if(newp > 800 || (snake.body.length > 0 && newp === snake.body[snake.body.length -1].offsetLeft && headtop === snake.body[snake.body.length -1].offsetTop)) snake.status = false;
+                        else 
+                            shead.setAttribute("style", `top: ${headtop}px; left: ${newp}px`);
+                        break;
+                    }
+                    default: {
+                        return;
+                    }
+                }
+                if(!snake.status) gameOver();
+                if(shead.offsetTop == food.offsetTop && shead.offsetLeft == food.offsetLeft){
+                    eatFood();
+                }
+                moveSnakeBody(headtop, headleft);
+            }
+
+            function moveSnakeBody(htop, hleft) {
+                let tempp,ttop,tleft;
+                let ptop = htop;
+                let pleft = hleft;
+                for(let i = 0; i < snake.body.length; i++){
+                    ttop = snake.body[i].offsetTop;
+                    tleft = snake.body[i].offsetLeft;
+                    snake.body[i].setAttribute("style", `top: ${ptop}px; left: ${pleft}px; background-color: ${snake.body[i].style.backgroundColor}`);
+                    ptop = ttop;
+                    pleft = tleft;
+                 }
+            }
+
+            function startGame() {
+                resetSnake();
+                putFood();
+                snake.status = true;
+                document.getElementById("pausebtn").innerText = "Pause";
+            }
+
+            function pauseGame() {
+                let btn = document.getElementById("pausebtn");
+                snake.status = !snake.status;
+                if(snake.status) btn.innerText = "Pause";
+                else btn.innerText = "Resume";
+            }
+
+            function resetSnake() {
+                for(let i = 0; i < snake.body.length; i++){
+                    snakebody.removeChild(snake.body[i]);
+                }
+                snake.body = [];
+                shead.setAttribute("style", "top: 0px; left 0px;");
+                snake.direction = "ArrowRight";
+            }
+
+            function gameOver(){
+                resetSnake();
+                food.style.visibility = "hidden";
+                //snake.status = false;
+                alert("Game Over!");
+            }
+
+            function putFood(){
+                //let oldfood = snakebody.querySelector("#food");
+                food.style.visibility = "hidden";
+                let ftop = (Math.floor((Math.random() * 24)) * 32);
+                let fleft = (Math.floor((Math.random() * 24)) * 32);
+                food.setAttribute("style", `top: ${ftop}px; left: ${fleft}px;`);
+                food.style.backgroundColor = getRandomColor();
+                food.style.visibility = "visible";
+            }
+
+            function getRandomColor() {
+                var letters = '0123456789ABCDEF';
+                var color = '#';
+                for (var i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            }
+
+            function eatFood() {
+                let number = snake.body.length;
+                let tail = document.createElement("div");
+                tail.setAttribute("class", "snakebodypart");
+                tail.setAttribute("id", `sbody_${number}`);
+                switch(snake.direction){
+                    case "ArrowUp": {
+                        tail.setAttribute("style", `top: ${shead.offsetTop + 32}px; left: ${shead.offsetLeft}px; background-color: ${food.style.backgroundColor}`);
+                        break;
+                    }
+                    case "ArrowDown": {
+                        tail.setAttribute("style", `top: ${shead.offsetTop - 32}px; left: ${shead.offsetLeft}px; background-color: ${food.style.backgroundColor}`);
+                        break;
+                    }
+                    case "ArrowLeft": {
+                        tail.setAttribute("style", `top: ${shead.offsetTop}px; left: ${shead.offsetLeft + 32}px; background-color: ${food.style.backgroundColor}`);
+                        break;
+                    }
+                    case "ArrowRight": {
+                        tail.setAttribute("style", `top: ${shead.offsetTop}px; left: ${shead.offsetLeft - 32}px; background-color: ${food.style.backgroundColor}`);
+                        break;
+                    }
+                    default:{
+                        break;
+                    }
+                }
+                snake.body.push(tail);
+                snakebody.appendChild(tail);
+
+                putFood();
+            }
+
+            setInterval(() => {
+                if(snake.status) moveSnake();
+            }, 800);
+
+        </script>    
+    </body>
+</html>

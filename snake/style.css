@@ -1,0 +1,42 @@
+.gamearea{
+    width: 800px;
+    height: 800px;
+    border: solid 2px;
+    margin: 50px 50px;
+    position: relative;
+    float: left;
+}
+
+.btns{
+    width: 100px;
+    height: 150px;
+    margin: 50px 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    float: left;
+}
+
+.snakehead{
+    width: 32px;
+    height: 32px;
+    background-color: green;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.snakebodypart{
+    width: 32px;
+    height: 32px;
+    position: absolute;
+}
+
+.food{
+    width: 32px;
+    height: 32px;
+    position: absolute;
+}

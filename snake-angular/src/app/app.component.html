@@ -1,0 +1,16 @@
+<div #gamearea (keydown)="keymovesnake($event)" class="gamearea" tabindex="0">
+  <div #snakehead class="snakehead">S</div>
+  <div #food class="food"></div>
+</div>
+<div class="btns">
+  <button (click)="startgame()">Start</button>
+  <button (click)="pause()" [disabled]="!snake.status" [innerText]="snake.move? 'Pause':'Resume'"></button>
+</div>
+
+<ng-template #gameover>
+  <h2 matDialogTitle>Game Over!</h2>
+  <p matDialogContent></p>
+  <mat-dialog-actions align="end">
+    <button mat-button matDialogClose>OK</button>
+  </mat-dialog-actions>
+</ng-template>

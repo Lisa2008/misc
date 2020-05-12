@@ -1,0 +1,46 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/snake-angular/dist
+/snake-angular/tmp
+/snake-angular/out-tsc
+# Only exists if Bazel was run
+/snake-angular/bazel-out
+
+# dependencies
+/snake-angular/node_modules
+
+# profiling files
+/snake-angular/chrome-profiler-events*.json
+/snake-angular/speed-measure-plugin*.json
+
+# IDEs and editors
+/snake-angular/.idea
+/snake-angular/.project
+/snake-angular/.classpath
+/snake-angular/.c9/
+/snake-angular/*.launch
+/snake-angular/.settings/
+/snake-angular/*.sublime-workspace
+
+# IDE - VSCode
+/snake-angular/.vscode/*
+!/snake-angular/.vscode/settings.json
+!/snake-angular/.vscode/tasks.json
+!/snake-angular/.vscode/launch.json
+!/snake-angular/.vscode/extensions.json
+/snake-angular/.history/*
+
+# misc
+/snake-angular/.sass-cache
+/snake-angular/connect.lock
+/snake-angular/coverage
+/snake-angular/libpeerconnection.log
+/snake-angular/npm-debug.log
+/snake-angular/yarn-error.log
+/snake-angular/testem.log
+/snake-angular/typings
+
+# System Files
+/snake-angular/.DS_Store
+/snake-angular/Thumbs.db
