@@ -3,6 +3,6 @@
 
   skake/:  Html + css + Javascript
   
-  angular-snake/: Angualr 9 version.
+  snake-angular/: Angualr 9 version.
   
   
