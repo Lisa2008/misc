@@ -1,0 +1,23 @@
+.page{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.gamearea{
+    width: 200px;
+    height: 300px;
+    border-bottom: dashed 2px black;
+    margin-bottom: 2vh;
+}
+
+.gamefooter{
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.overmsg{
+    color: red;
+}
