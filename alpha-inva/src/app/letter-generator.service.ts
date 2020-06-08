@@ -1,16 +1,18 @@
 import { Injectable, Inject } from '@angular/core';
-import { Observable, BehaviorSubject, of, interval } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of, interval, Subject } from 'rxjs';
+import { map, take, takeUntil } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LetterGeneratorService {
-  readonly levelChangeThreshold = 20;
 
-  source = interval(1000);
+  source: Observable<number>;
+  private stopSignal$: Subject<any> = new Subject();
 
-  constructor(@Inject('gameWidth') private gameWidth: number) { }
+  constructor(@Inject('serviceConfig') private serviceConfig) {
+    this.source = interval(this.serviceConfig.interval);
+   }
 
   private randomLetter( condition: string ): string {
     if (condition === 'lowercase') {
@@ -27,10 +29,16 @@ export class LetterGeneratorService {
 
  getLetter(level: number): Observable<string> {
    return this.source.pipe(
-     take(this.levelChangeThreshold),
+     take(this.serviceConfig.levelThreshold),
+     //take(5),
      map(x => {
        return level > 3 ? this.randomLetter('all') : this.randomLetter('lowercase');
-     })
+     }),
+     takeUntil(this.stopSignal$)
    );
+}
+
+stopGenerateLetters() {
+  this.stopSignal$.next();
 }
 }

@@ -9,6 +9,8 @@
     height: 300px;
     border-bottom: dashed 2px black;
     margin-bottom: 2vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .gamefooter{
@@ -21,3 +23,16 @@
 .overmsg{
     color: red;
 }
+
+.line{
+    position: relative;
+    width: 100%;
+    height:26px;
+}
+
+.letter{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+

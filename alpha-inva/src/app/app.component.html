@@ -5,13 +5,13 @@
   <p>
     Score: {{score}}, Level: {{level}}
   </p>
-  <div class="gamearea">
-    {{tempshow}}
+  <div #gamearea class="gamearea">
+    
   </div>
   <div class="gamefooter">
-    <button class="btn btn-secondary btn-sm">Start</button>
+    <button (click)="startGame()" class="btn btn-secondary btn-sm">Start</button>
     <div class="small overmsg">
-      Game Over!
+      Game Over! 
     </div>
   </div>
 </div>
