@@ -3,6 +3,8 @@ import { ViewChild } from '@angular/core';
 
 import { LetterGeneratorService } from './letter-generator.service';
 import { LevelConfig } from './app.config';
+import { Observable, Subscription, fromEvent, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +18,8 @@ import { LevelConfig } from './app.config';
 export class AppComponent implements OnInit {
   @ViewChild ('gamearea') gamearea: ElementRef;
 
+  keyPress: Observable<string>;
+
   score = 0;
   level = 1;
   lines = [];
@@ -27,6 +31,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.keyPress = fromEvent(document, 'keypress').pipe(
+      map((event: KeyboardEvent) => event.key)
+    );
   }
 
   startGame() {
@@ -40,11 +47,18 @@ export class AppComponent implements OnInit {
       this.render.appendChild(line, word);
       this.render.insertBefore(this.gamearea.nativeElement, line, this.currentLine);
       this.currentLine = line;
-      this.lines.push(line);
+      this.lines.push({element: line, letter: x});
 
       this.maxlines = this.maxlines === 0 ? Math.ceil(this.gamearea.nativeElement.offsetHeight / line.offsetHeight) : this.maxlines;
 
       this.judgeGameOver();
+    });
+
+    this.keyPress.subscribe( key => {
+      if(this.lines.length > 0 && key === this.lines[0].letter){
+        this.render.removeChild(this.gamearea.nativeElement, this.lines[0].element);
+        this.lines.shift();
+      }
     });
   }
 

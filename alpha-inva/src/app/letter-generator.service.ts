@@ -10,8 +10,11 @@ export class LetterGeneratorService {
   source: Observable<number>;
   private stopSignal$: Subject<any> = new Subject();
 
+  countdown: number;
+
   constructor(@Inject('serviceConfig') private serviceConfig) {
     this.source = interval(this.serviceConfig.interval);
+    this.countdown = this.serviceConfig.levelThreshold;
    }
 
   private randomLetter( condition: string ): string {
@@ -29,10 +32,14 @@ export class LetterGeneratorService {
 
  getLetter(level: number): Observable<string> {
    return this.source.pipe(
-     take(this.serviceConfig.levelThreshold),
      //take(5),
      map(x => {
-       return level > 3 ? this.randomLetter('all') : this.randomLetter('lowercase');
+       if(this.countdown === 0) {
+         return ' ';
+       } else {
+         this.countdown--;
+         return level > 3 ? this.randomLetter('all') : this.randomLetter('lowercase');
+       }
      }),
      takeUntil(this.stopSignal$)
    );
