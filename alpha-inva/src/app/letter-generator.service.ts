@@ -38,7 +38,8 @@ export class LetterGeneratorService {
          return ' ';
        } else {
          this.countdown--;
-         return level > 3 ? this.randomLetter('all') : this.randomLetter('lowercase');
+         //return level > 3 ? this.randomLetter('all') : this.randomLetter('lowercase');
+         return 'a';
        }
      }),
      takeUntil(this.stopSignal$)

@@ -3,8 +3,8 @@ import { ViewChild } from '@angular/core';
 
 import { LetterGeneratorService } from './letter-generator.service';
 import { LevelConfig } from './app.config';
-import { Observable, Subscription, fromEvent, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, fromEvent } from 'rxjs';
+import { map, merge} from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
   @ViewChild ('gamearea') gamearea: ElementRef;
 
   keyPress: Observable<string>;
+  gameLetters: Observable<object>;
 
   score = 0;
   level = 1;
@@ -37,28 +38,25 @@ export class AppComponent implements OnInit {
   }
 
   startGame() {
-    this.letterGenerator.getLetter(1).subscribe(x => {
-      let line = this.render.createElement('div');
-      line.setAttribute('class', 'line');
-      let word = this.render.createElement('span');
-      word.setAttribute('class', 'letter');
-      word.style.left = `${this.getWPosition()}px`;
-      word.textContent = x;
-      this.render.appendChild(line, word);
-      this.render.insertBefore(this.gamearea.nativeElement, line, this.currentLine);
-      this.currentLine = line;
-      this.lines.push({element: line, letter: x});
+    this.gameLetters = this.letterGenerator.getLetter(1).pipe(
+      map(x =>{
+        let line = this.render.createElement('div');
+        line.setAttribute('class', 'line');
+        let word = this.render.createElement('span');
+        word.setAttribute('class', 'letter');
+        word.style.left = `${this.getWPosition()}px`;
+        word.textContent = x;
+        this.render.appendChild(line, word);
+        this.render.insertBefore(this.gamearea.nativeElement, line, this.currentLine);
+        this.currentLine = line;
+        this.lines.push({element: line, letter: x});
+        return this.lines[0];
+      }),
+      merge(this.keyPress)
+    );
 
-      this.maxlines = this.maxlines === 0 ? Math.ceil(this.gamearea.nativeElement.offsetHeight / line.offsetHeight) : this.maxlines;
-
-      this.judgeGameOver();
-    });
-
-    this.keyPress.subscribe( key => {
-      if(this.lines.length > 0 && key === this.lines[0].letter){
-        this.render.removeChild(this.gamearea.nativeElement, this.lines[0].element);
-        this.lines.shift();
-      }
+    this.gameLetters.subscribe( val => {
+      console.log(val);
     });
   }
 
