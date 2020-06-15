@@ -3,7 +3,7 @@ import { ViewChild } from '@angular/core';
 
 import { LetterGeneratorService } from './letter-generator.service';
 import { LevelConfig } from './app.config';
-import { Observable, fromEvent } from 'rxjs';
+import { Observable, fromEvent, timer } from 'rxjs';
 import { map, merge} from 'rxjs/operators';
 
 @Component({
@@ -21,10 +21,11 @@ export class AppComponent implements OnInit {
   keyPress: Observable<string>;
   gameLetters: Observable<any>;
 
-  game = { status: false};
+  game = { status: false,
+           level: 1,
+           score: 0
+          };
 
-  score = 0;
-  level = 1;
   lines = [];
   currentLine = null;
   private maxlines = 0;
@@ -41,7 +42,7 @@ export class AppComponent implements OnInit {
 
   startGame() {
     this.game.status = true;
-    this.gameLetters = this.letterGenerator.getLetter(1).pipe(
+    this.gameLetters = this.letterGenerator.getLetter(this.game.level).pipe(
       map(x => {
           return {source: 'g', letter: x};
       }),
@@ -65,6 +66,7 @@ export class AppComponent implements OnInit {
         if (this.lines.length > 0 && val === this.lines[0].letter) {
           this.render.removeChild(this.gamearea.nativeElement, this.lines[0].element);
           this.lines.shift();
+          this.game.score++;
         }
       }
       this.judgeGameOver();
@@ -80,6 +82,8 @@ export class AppComponent implements OnInit {
     if (this.lines.length > this.maxlines) {
       this.letterGenerator.stopGenerateLetters();
       this.game.status = false;
+      this.game.score = 0;
+      this.game.level = 1;
       alert('Game Over');
       this.clearChild();
     }
@@ -92,6 +96,11 @@ export class AppComponent implements OnInit {
       this.letterGenerator.stopGenerateLetters();
       alert('Next level');
       this.clearChild();
+      this.game.level++;
+      const nextTime = timer(3000);
+      nextTime.subscribe( x => {
+        this.startGame();
+      });
     }
   }
 
@@ -100,5 +109,6 @@ export class AppComponent implements OnInit {
       this.render.removeChild(this.gamearea.nativeElement, obj.element);
     }
     this.lines = [];
+    this.currentLine = null;
   }
 }
