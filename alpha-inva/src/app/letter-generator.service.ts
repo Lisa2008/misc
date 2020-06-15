@@ -31,15 +31,16 @@ export class LetterGeneratorService {
  }
 
  getLetter(level: number): Observable<string> {
-   return this.source.pipe(
+  this.countdown = this.serviceConfig.levelThreshold;
+
+  return this.source.pipe(
      //take(5),
      map(x => {
-       if(this.countdown === 0) {
+       if (this.countdown === 0) {
          return ' ';
        } else {
          this.countdown--;
-         //return level > 3 ? this.randomLetter('all') : this.randomLetter('lowercase');
-         return 'a';
+         return level > 3 ? this.randomLetter('all') : this.randomLetter('lowercase');
        }
      }),
      takeUntil(this.stopSignal$)
