@@ -23,7 +23,8 @@ export class AppComponent implements OnInit {
 
   game = { status: false,
            level: 1,
-           score: 0
+           score: 0,
+           higestScore: 0
           };
 
   lines = [];
@@ -67,6 +68,7 @@ export class AppComponent implements OnInit {
           this.render.removeChild(this.gamearea.nativeElement, this.lines[0].element);
           this.lines.shift();
           this.game.score++;
+          this.game.higestScore = this.game.higestScore > this.game.score ? this.game.higestScore : this.game.score;
         }
       }
       this.judgeGameOver();

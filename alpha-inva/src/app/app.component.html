@@ -11,8 +11,8 @@
   <div class="gamefooter">
     <button (click)="startGame()" class="btn btn-secondary btn-sm"
       [disabled]="game.status">Start</button>
-    <div class="small overmsg">
-      Game Over! 
+    <div class="small">
+      Higest Score: {{ game.higestScore }}
     </div>
   </div>
 </div>
