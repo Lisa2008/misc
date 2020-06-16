@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
+import { Component, OnInit, Renderer2, ElementRef, AfterViewInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
 
 import { LetterGeneratorService } from './letter-generator.service';
@@ -15,7 +15,7 @@ import { map, merge} from 'rxjs/operators';
     {provide: 'serviceConfig', useValue: LevelConfig}
   ]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild ('gamearea') gamearea: ElementRef;
 
   keyPress: Observable<string>;
@@ -31,6 +31,8 @@ export class AppComponent implements OnInit {
   currentLine = null;
   private maxlines = 0;
 
+  infoDiv: any;
+
   constructor(private letterGenerator: LetterGeneratorService,
               private render: Renderer2) {
   }
@@ -41,7 +43,17 @@ export class AppComponent implements OnInit {
     );
   }
 
+  ngAfterViewInit() {
+    this.infoDiv = this.render.createElement('div');
+    this.infoDiv.setAttribute('class', 'info');
+    this.render.appendChild(this.gamearea.nativeElement, this.infoDiv);
+  }
+
   startGame() {
+    this.infoDiv.classList.remove('gameover');
+    this.infoDiv.innerHTML = `Level ${this.game.level}`;
+    this.infoDiv.style.display = 'block';
+
     this.game.status = true;
     this.gameLetters = this.letterGenerator.getLetter(this.game.level).pipe(
       map(x => {
@@ -51,6 +63,7 @@ export class AppComponent implements OnInit {
     );
 
     this.gameLetters.subscribe( val => {
+      this.infoDiv.style.display = 'none';
       if (typeof val === 'object'){
         let line = this.render.createElement('div');
         line.setAttribute('class', 'line');
@@ -86,8 +99,10 @@ export class AppComponent implements OnInit {
       this.game.status = false;
       this.game.score = 0;
       this.game.level = 1;
-      alert('Game Over');
       this.clearChild();
+      this.infoDiv.innerHTML = 'Game Over';
+      this.infoDiv.classList.add('gameover');
+      this.infoDiv.style.display = 'block';
     }
 
     if(this.lines.length === 0) {
@@ -96,11 +111,15 @@ export class AppComponent implements OnInit {
 
     if (this.lines.length > 0 && this.lines[0].letter === ' ') {
       this.letterGenerator.stopGenerateLetters();
-      alert('Next level');
       this.clearChild();
       this.game.level++;
-      const nextTime = timer(3000);
+
+      this.infoDiv.innerHTML = `Level ${this.game.level}`;
+      this.infoDiv.style.display = 'block';
+
+      const nextTime = timer(2000);
       nextTime.subscribe( x => {
+        this.infoDiv.style.display = 'none';
         this.startGame();
       });
     }

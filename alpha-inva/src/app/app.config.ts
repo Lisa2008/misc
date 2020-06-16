@@ -1,5 +1,5 @@
 export const LevelConfig = {
-    interval: 1000,
+    interval: 800,
     levelThreshold: 15,
     levelWordIncrease: 2,
     levelSpeedStep: 50

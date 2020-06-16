@@ -32,3 +32,14 @@
     left: 0px;
 }
 
+.info{
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    padding-top: 100px;
+    display: none;
+}
+
+.gameover{
+    color: red;
+}
