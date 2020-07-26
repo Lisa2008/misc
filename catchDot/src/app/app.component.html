@@ -1,0 +1,12 @@
+<div class="page">
+  <h2>Catch The Dot Game</h2>
+  <div #gamearea class="gamearea">
+    <div #dot class="dot">{{gameStatus.hitCount}}</div>
+    <div class="timer">{{timerText}}</div>
+  </div>
+  <div #info class="bottom">
+    <button (click)="startGame()" [disabled]="gameStatus.gameStart">Start</button>
+    <div #info>
+      Move mouse to the dot.
+    </div>
+  </div>

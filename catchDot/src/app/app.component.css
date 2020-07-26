@@ -1,0 +1,39 @@
+.page{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.dot{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    text-align: center;
+    color: white;
+    background-color: lightgray;
+    transition: all 0.6s ease-in-out;
+}
+
+.gamearea{
+    width: 500px;
+    height: 500px;
+    border: double 4px grey;
+    position: relative;
+}
+
+.bottom{
+    margin-top: 10px;
+    font-size: 1.2em;
+    width: 500px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.timer{
+    position: absolute;
+    top: 220px;
+    left: 240px;
+    font-size: 2.6em;
+    color: lightgray;
+}
