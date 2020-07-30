@@ -1,0 +1,31 @@
+.gameArea{
+    width: 500px;
+    height: 400px;
+    border: solid 2px deeppink;
+    margin: auto;
+    position: relative;
+}
+
+.gameInfo{
+    width: 500px;
+    margin: auto;
+    padding: 10px;
+}
+
+.block1{
+    width: 50px;
+    height: 20px;
+    background-color: blue;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.block2{
+    width: 20px;
+    height: 40px;
+    background-color: black;
+    position: absolute;
+    left: 250px;
+    top: 0px;
+}
